@@ -170,16 +170,121 @@ class Team(object):
     '''Print team statistics'''
 
 
-if __name__ == "__main__":
+class Arena:
+    def __init__(self):
+        self.team_one = None
+        self.team_two = None
 
-    hero1 = Hero("Wonder Woman")
-    hero2 = Hero("Dumbledore")
-    ability1 = Ability("Super Speed", 80)
-    ability2 = Ability("Super Eyes", 20)
-    ability3 = Ability("Wizard Wand", 80)
-    ability4 = Ability("Wizard Beard", 20)
-    hero1.add_ability(ability1)
-    hero1.add_ability(ability2)
-    hero2.add_ability(ability3)
-    hero2.add_ability(ability4)
-    hero1.fight(hero2)
+    def create_ability(self):
+        name = input("Enter the name of the hero's ability: ")
+        max_damage = int(
+            input("Enter the maximum damage of the hero's ability: "))
+        user_ability = Ability(name, max_damage)
+        return user_ability
+    """ return Ability with values from user Input"""
+
+    def create_weapon(self):
+        name = input("Enter name of heroes weapon: ")
+        max_damage = int(
+            input("Enter maximum damage of heroes weapon: "))
+        user_weapon = Weapon(name, max_damage)
+        return user_weapon
+    # same for weapons
+
+    def create_armor(self):
+        name = input("Enter type of heroes armor: ")
+        max_block = int(
+            input("Enter maximum block of the heroes armor: "))
+        user_armor = Armor(name, max_block)
+        return user_armor
+    #  again for armor
+
+    def create_hero(self):
+        name = input("Enter the name of the hero. ")
+        starting_health = int(
+            input("Enter the starting health of the hero "))
+        user_hero = Hero(name, starting_health)
+        num_abilities = int(
+            input("How many abilities would you like your hero to have? "))
+        for i in range(0, num_abilities):
+            user_hero.add_ability(self.create_ability())
+        num__weapons = int(input("How many weapons for your hero? "))
+        for i in range(0, num__weapons):
+            user_hero.add_user_weapon(self.create_weapon())
+        num_armor = int(input("How many armors for your hero? "))
+        for i in range(0, num_armor):
+            user_hero.add_armor(self.create_armor())
+        return user_hero
+
+    def build_team_one(self):
+        num_heroes = int(input("How many heroes team one? "))
+        self.team_one = Team(
+            input("Team Name? "))
+        for i in range(0, num_heroes):
+            self.team_one.heroes.append(self.create_hero())
+
+    def build_team_two(self):
+        num_heroes = int(
+            input("How many heroes on team two?"))
+        self.team_two = Team(
+            input("Team name? "))
+        for i in range(0, num_heroes):
+            self.team_two.heroes.append(self.create_hero())
+
+    def show_stats(self):
+        team_one_total_kills = 0
+        team_one_total_deaths = 0
+        team_two_total_kills = 0
+        team_two_total_deaths = 0
+        for hero in self.team_one.heroes:
+            team_one_total_kills += hero.kills
+            team_one_total_deaths += hero.deaths
+        for hero in self.team_two.heroes:
+            team_two_total_kills += hero.kills
+            team_two_total_deaths += hero.deaths
+
+        team_one_ratio = team_one_total_kills / team_one_total_deaths
+        team_two_ratio = team_two_total_kills / team_two_total_deaths
+        print("Team ones K:D ratio: " + str(team_one_ratio))
+        print("Team twos K:D ratio: " + str(team_two_ratio))
+
+    def team_battle(self):
+        self.team_one.attack(self.team_two)
+
+
+if __name__ == "__main__":
+    game_is_running = True
+
+    # Instantiate Game Arena
+    arena = Arena()
+
+    # Build Teams
+    arena.build_team_one()
+    arena.build_team_two()
+
+    while game_is_running:
+
+        arena.team_battle()
+        arena.show_stats()
+        play_again = input("Play Again? Y or N: ")
+
+        # Check for Player Input
+        if play_again.lower() == "n":
+            game_is_running = False
+
+        else:
+            # Revive heroes to play again
+            arena.team_one.revive_heroes()
+            arena.team_two.revive_heroes()
+
+    # hero1 = Hero("Wonder Woman")
+    # hero2 = Hero("Dumbledore")
+    # ability1 = Ability("Super Speed", 80)
+    # ability2 = Ability("Super Eyes", 20)
+    # ability3 = Ability("Wizard Wand", 80)
+    # ability4 = Ability("Wizard Beard", 20)
+    # hero1.add_ability(ability1)
+    # hero1.add_ability(ability2)
+    # hero2.add_ability(ability3)
+    # hero2.add_ability(ability4)
+    # hero1.fight(hero2)
