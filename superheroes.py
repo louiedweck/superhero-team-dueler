@@ -46,6 +46,8 @@ class Hero:
         self.name = name
         self.starting_health = starting_health
         self.current_health = starting_health
+        self.deaths = 0
+        self.kills = 0
 
     def add_ability(self, ability):
         self.abilities.append(ability)
@@ -105,6 +107,42 @@ class Hero:
                 # other attacks self
                 self.take_damage(opponent.attack())
             print(opponent.name + " defeated", self.name + '!')
+
+    def add_kill(self, num_kills):
+        self.kills += num_kills
+
+    def add_deaths(self, num_deaths):
+        self.deaths += num_deaths
+
+
+class Weapon(Ability):
+    def __init__(self, name, max_damage):
+        super().__init__(name, max_damage)
+
+    def attack(self):
+        return random.randint(self.max_damage//2, self.max_damage)
+
+
+class Team(object):
+    def __init__(self, name):
+        self.name = name
+        self.heroes = []
+
+    def remove_hero(self, name):
+        for hero in self.heroes:
+            if hero.name == name:
+                self.heroes.remove(hero)
+            return 0
+        '''Remove hero from heroes list.
+        If Hero isn't found return 0.
+        '''
+
+    def view_all_heroes(self):
+        for hero in self.heroes:
+            print(hero.name)
+
+    def add_hero(self, hero):
+        self.heroes.append(hero)
 
 
 if __name__ == "__main__":
