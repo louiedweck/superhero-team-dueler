@@ -89,11 +89,15 @@ class Hero:
         elif len(self.abilities) == 0:
             # kill self
             self.current_health = 0
+            opponent.add_kills(1)
+            self.add_deaths(1)
             print(opponent.name + " defeated", self.name + '!')
         # elif other has no abilities:
         elif len(opponent.abilities) == 0:
             # kill other
             opponent.current_health <= 0
+            opponent.add_deaths(1)
+            self.add_kill(1)
             print(self.name + " defeated", opponent.name + '!')
         # else:
         else:
@@ -102,11 +106,13 @@ class Hero:
                 # self attacks other
                 opponent.take_damage(self.attack())
                 if not opponent.is_alive():
+                    self.add_kill(1)
+                    opponent.add_deaths(1)
                     print(self.name + " defeated", opponent.name + '!')
                     return
                 # other attacks self
                 self.take_damage(opponent.attack())
-            print(opponent.name + " defeated", self.name + '!')
+                print(opponent.name + " defeated", self.name + '!')
 
     def add_kill(self, num_kills):
         self.kills += num_kills
@@ -144,17 +150,28 @@ class Team(object):
     def add_hero(self, hero):
         self.heroes.append(hero)
 
+    def attack(self, other_team):
+        while self.heroes and other_team.heroes:
+            hero_1 = random.choice(self.heroes)
+            hero_2 = random.choice(other_team.heroes)
+            if hero_1.is_alive() and hero_2.is_alive():
+                hero_1.fight(hero_2)
+
+    def revive_heroes(self, health=100):
+        for hero in self.heroes:
+            if hero.is_alive() == False:
+                hero.current_health = hero.starting_health
+    ''' Reset all heroes health to starting_health'''
+
+    def stats(self):
+        for hero in self.heroes:
+            ratio = hero.kills / hero.deaths
+            print(hero.name + "'s K/D is " + ratio)
+    '''Print team statistics'''
+
 
 if __name__ == "__main__":
-        # ability = Ability("Debugging Ability", 20)
-        # print(ability.name)
-        # print(ability.attack())
 
-    # hero = Hero("Grace Hopper", 200)
-    # shield = Armor("Shield", 50)
-    # hero.add_armor(shield)
-    # hero.take_damage(50)
-    # print(hero.current_health)
     hero1 = Hero("Wonder Woman")
     hero2 = Hero("Dumbledore")
     ability1 = Ability("Super Speed", 80)
